@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "Myview.h"
+#import "HLFragmentDragView.h"
 @interface ViewController ()
 @end
 
@@ -17,7 +17,7 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    Myview *vi = [[Myview alloc] initWithFrame:CGRectMake(0, 30, 320, 320) withImages:@[[UIImage imageNamed:@"1"], [UIImage imageNamed:@"2"], [UIImage imageNamed:@"3"]]];
+    HLFragmentDragView *vi = [[HLFragmentDragView alloc] initWithFrame:CGRectMake(0, 30, 320, 320) withImages:@[[UIImage imageNamed:@"1"], [UIImage imageNamed:@"2"], [UIImage imageNamed:@"3"]]];
     [self.view addSubview:vi];
     vi.backgroundColor = [UIColor blueColor];
 }

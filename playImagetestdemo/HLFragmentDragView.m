@@ -1,35 +1,35 @@
 //
-//  Myview.m
+//  HLFragmentDragView.m
 //  playImagetestdemo
 //
-//  Created by 江 on 16/7/6.
+//  Created by 江 on 16/7/11.
 //  Copyright © 2016年 江. All rights reserved.
 //
 
-#import "Myview.h"
+#import "HLFragmentDragView.h"
 #define EveryViewSpace_FragmentView 5
 #define ImageViewTag_FragmentView   100
 #define PointSpace_FragmentView     10
 #define NoIndex_FragmentView        999
-@interface Myview () <UIScrollViewDelegate>
+@interface HLFragmentDragView () <UIScrollViewDelegate>
 @property (nonatomic, strong) NSArray<__kindof UIImage      *> *arr;
 @property (nonatomic, strong) NSArray<__kindof UIScrollView *> *sclArray;
 @property (nonatomic, strong) UIView       *theKuang;
 @property (nonatomic, assign) NSInteger    curScrollView;
 @end
-@implementation Myview
+@implementation HLFragmentDragView
 - (instancetype)initWithFrame:(CGRect)frame withImages:(NSArray<__kindof UIImage *> *)arr {
     if (self = [super initWithFrame:frame]) {
         self.sclArray                    = @[];
-
+        
         self.theKuang                    = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
         [self addSubview:self.theKuang];
-        self.theKuang.layer.cornerRadius = 8;
+//        self.theKuang.layer.cornerRadius = 8;
         self.theKuang.layer.borderWidth  = 2;
         self.theKuang.layer.borderColor  = [UIColor orangeColor].CGColor;
-
+        
         self.curScrollView               = NoIndex_FragmentView;
-
+        
         [self settingImages:arr];
     }
     return self;
@@ -65,7 +65,7 @@
     if (self.arr.count > 1) {
         NSInteger index = [self getIndexWithPanGestureRecognizer:scrollView.panGestureRecognizer];
         if (index != self.curScrollView && index != NoIndex_FragmentView) {
-            if (self.sclArray.count > index) {
+            if (self.sclArray.count > index && scrollView.isDragging) {
                 UIScrollView *secondScl = self.sclArray[index];
                 secondScl.layer.borderColor = [UIColor orangeColor].CGColor;
                 secondScl.layer.borderWidth = 2;
@@ -97,7 +97,11 @@
                     [self settingFrameWithImage:[scl viewWithTag:ImageViewTag_FragmentView] withScrollView:scl];
                     [self settingFrameWithImage:[scrollView viewWithTag:ImageViewTag_FragmentView] withScrollView:scrollView];
                 } completion:^(BOOL finished) {
-                    
+                    NSMutableArray *muarr = self.sclArray.mutableCopy;
+                    NSUInteger index1 = [muarr indexOfObject:scrollView];
+                    NSUInteger index2 = index;
+                    [muarr exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+                    self.sclArray = muarr.copy;
                 }];
             }
         }
@@ -113,7 +117,6 @@
             (scl.frame.origin.x + scl.frame.size.width - PointSpace_FragmentView > point.x) &&
             (scl.frame.origin.y + scl.frame.size.height - PointSpace_FragmentView > point.y)
             ) {
-            NSLog(@"jj:%d", i);
             return i;
         }
         i++;
@@ -128,7 +131,7 @@
 - (UIScrollView *)getScroll {
     UIScrollView *scl                  = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
     scl.delegate                       = self;
-    scl.layer.cornerRadius             = EveryViewSpace_FragmentView;
+    scl.layer.cornerRadius             = 0;
     scl.minimumZoomScale               = 1;
     scl.maximumZoomScale               = 2;
     scl.alwaysBounceVertical           = YES;
@@ -177,8 +180,9 @@
     return temArray.copy;
 }
 - (UIImage *)getScrollViewCurrentImageWithScl:(UIScrollView *)scl {
-    UIGraphicsBeginImageContext(scl.bounds.size);
+    UIGraphicsBeginImageContextWithOptions(scl.bounds.size, NO, [UIScreen mainScreen].scale);
     CGContextRef concext = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(concext, -scl.contentOffset.x, -scl.contentOffset.y);
     [scl.layer renderInContext:concext];
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -187,34 +191,35 @@
 #pragma mark 布局
 - (void)lauoutOne {
     UIScrollView *scl = [self getScroll];
-    scl.frame = CGRectMake(EveryViewSpace_FragmentView,
-                           EveryViewSpace_FragmentView,
-                           self.frame.size.width - EveryViewSpace_FragmentView * 2,
-                           self.frame.size.height - EveryViewSpace_FragmentView * 2
+    scl.frame = CGRectMake(0,
+                           0,
+                           self.frame.size.width,
+                           self.frame.size.height
                            );
     [self addSubview:scl];
     
     UIImageView *img = [self getImageViewWithScroll:scl withImage:self.arr.firstObject];
     [scl addSubview:img];
+    self.sclArray = [self.sclArray arrayByAddingObject:scl];
 }
 - (void)lauoutTwo {
     if (self.arr.count == 2) {
         UIScrollView *scl = [self getScroll];
-        scl.frame = CGRectMake(EveryViewSpace_FragmentView,
-                               EveryViewSpace_FragmentView,
-                               self.frame.size.width - EveryViewSpace_FragmentView * 2,
-                               (self.frame.size.height - 3 * EveryViewSpace_FragmentView) / 2.0
+        scl.frame = CGRectMake(0,
+                               0,
+                               (self.frame.size.width - 1 * EveryViewSpace_FragmentView) / 2.0,
+                               self.frame.size.height
                                );
         [self addSubview:scl];
         UIImageView *img = [self getImageViewWithScroll:scl withImage:self.arr.firstObject];
         [scl addSubview:img];
         
         UIScrollView *scl1 = [self getScroll];
-        scl1.frame = CGRectMake(EveryViewSpace_FragmentView,
-                                scl.frame.origin.y + scl.frame.size.height + EveryViewSpace_FragmentView,
-                                self.frame.size.width - EveryViewSpace_FragmentView * 2,
-                                (self.frame.size.height - 3 * EveryViewSpace_FragmentView) / 2.0
-                               );
+        scl1.frame = CGRectMake(scl.frame.origin.x + scl.frame.size.width + EveryViewSpace_FragmentView,
+                                0,
+                                (self.frame.size.width - 1 * EveryViewSpace_FragmentView) / 2.0,
+                                self.frame.size.height
+                                );
         [self addSubview:scl1];
         UIImageView *img1 = [self getImageViewWithScroll:scl1 withImage:self.arr[1]];
         [scl1 addSubview:img1];
@@ -225,10 +230,10 @@
 - (void)lauoutThree {
     if (self.arr.count == 3) {
         UIScrollView *scl = [self getScroll];
-        scl.frame = CGRectMake(EveryViewSpace_FragmentView,
-                               EveryViewSpace_FragmentView,
-                               (self.frame.size.width - 3 * EveryViewSpace_FragmentView) / 2.0,
-                               self.frame.size.height - EveryViewSpace_FragmentView * 2
+        scl.frame = CGRectMake(0,
+                               0,
+                               (self.frame.size.width - 1 * EveryViewSpace_FragmentView) / 2.0,
+                               self.frame.size.height
                                );
         [self addSubview:scl];
         UIImageView *img = [self getImageViewWithScroll:scl withImage:self.arr.firstObject];
@@ -236,10 +241,10 @@
         
         UIScrollView *scl1 = [self getScroll];
         scl1.frame = CGRectMake(scl.frame.origin.x + scl.frame.size.width + EveryViewSpace_FragmentView,
-                                EveryViewSpace_FragmentView,
-                                (self.frame.size.width - 3 * EveryViewSpace_FragmentView) / 2.0,
-                                (self.frame.size.height - 3 * EveryViewSpace_FragmentView) / 2.0
-                               );
+                                0,
+                                (self.frame.size.width - 1 * EveryViewSpace_FragmentView) / 2.0,
+                                (self.frame.size.height - 1 * EveryViewSpace_FragmentView) / 2.0
+                                );
         [self addSubview:scl1];
         UIImageView *img1 = [self getImageViewWithScroll:scl1 withImage:self.arr[1]];
         [scl1 addSubview:img1];
@@ -247,8 +252,8 @@
         UIScrollView *scl2 = [self getScroll];
         scl2.frame = CGRectMake(scl1.frame.origin.x,
                                 scl1.frame.origin.y + scl1.frame.size.height + EveryViewSpace_FragmentView,
-                                (self.frame.size.width - 3 * EveryViewSpace_FragmentView) / 2.0,
-                                (self.frame.size.height - 3 * EveryViewSpace_FragmentView) / 2.0
+                                (self.frame.size.width - 1 * EveryViewSpace_FragmentView) / 2.0,
+                                (self.frame.size.height - 1 * EveryViewSpace_FragmentView) / 2.0
                                 );
         [self addSubview:scl2];
         UIImageView *img2 = [self getImageViewWithScroll:scl2 withImage:self.arr[2]];
@@ -259,12 +264,12 @@
 }
 - (void)lauoutFour {
     if (self.arr.count == 4) {
-        CGFloat imageWidth = (self.frame.size.width - 3 * EveryViewSpace_FragmentView) / 2.0;
-        CGFloat imageHeight = (self.frame.size.height - 3 * EveryViewSpace_FragmentView) / 2.0;
+        CGFloat imageWidth = (self.frame.size.width - 1 * EveryViewSpace_FragmentView) / 2.0;
+        CGFloat imageHeight = (self.frame.size.height - 1 * EveryViewSpace_FragmentView) / 2.0;
         
         UIScrollView *scl = [self getScroll];
-        scl.frame = CGRectMake(EveryViewSpace_FragmentView,
-                               EveryViewSpace_FragmentView,
+        scl.frame = CGRectMake(0,
+                               0,
                                imageWidth,
                                imageHeight
                                );
@@ -274,7 +279,7 @@
         
         UIScrollView *scl1 = [self getScroll];
         scl1.frame = CGRectMake(scl.frame.origin.x + scl.frame.size.width + EveryViewSpace_FragmentView,
-                                EveryViewSpace_FragmentView,
+                                0,
                                 imageWidth,
                                 imageHeight
                                 );
@@ -283,7 +288,7 @@
         [scl1 addSubview:img1];
         
         UIScrollView *scl2 = [self getScroll];
-        scl2.frame = CGRectMake(EveryViewSpace_FragmentView,
+        scl2.frame = CGRectMake(0,
                                 scl.frame.origin.y + scl.frame.size.height + EveryViewSpace_FragmentView,
                                 imageWidth,
                                 imageHeight

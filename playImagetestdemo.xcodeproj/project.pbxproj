@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EE3361B71D2CDA3A00B43952 /* Myview.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3361B61D2CDA3A00B43952 /* Myview.m */; };
+		EE84A44A1D9255EC0007012E /* HLFragmentDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE84A4491D9255EC0007012E /* HLFragmentDragView.m */; };
 		EEEBA8751D2BAFD200C0988D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EEEBA8741D2BAFD200C0988D /* main.m */; };
 		EEEBA8781D2BAFD200C0988D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EEEBA8771D2BAFD200C0988D /* AppDelegate.m */; };
 		EEEBA87B1D2BAFD200C0988D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEEBA87A1D2BAFD200C0988D /* ViewController.m */; };
@@ -17,8 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		EE3361B51D2CDA3A00B43952 /* Myview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Myview.h; sourceTree = "<group>"; };
-		EE3361B61D2CDA3A00B43952 /* Myview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Myview.m; sourceTree = "<group>"; };
+		EE84A4481D9255EC0007012E /* HLFragmentDragView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HLFragmentDragView.h; sourceTree = "<group>"; };
+		EE84A4491D9255EC0007012E /* HLFragmentDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HLFragmentDragView.m; sourceTree = "<group>"; };
 		EEEBA8701D2BAFD200C0988D /* playImagetestdemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = playImagetestdemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEEBA8741D2BAFD200C0988D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EEEBA8761D2BAFD200C0988D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -65,8 +65,8 @@
 				EEEBA8771D2BAFD200C0988D /* AppDelegate.m */,
 				EEEBA8791D2BAFD200C0988D /* ViewController.h */,
 				EEEBA87A1D2BAFD200C0988D /* ViewController.m */,
-				EE3361B51D2CDA3A00B43952 /* Myview.h */,
-				EE3361B61D2CDA3A00B43952 /* Myview.m */,
+				EE84A4481D9255EC0007012E /* HLFragmentDragView.h */,
+				EE84A4491D9255EC0007012E /* HLFragmentDragView.m */,
 				EEEBA87C1D2BAFD200C0988D /* Main.storyboard */,
 				EEEBA87F1D2BAFD200C0988D /* Assets.xcassets */,
 				EEEBA8811D2BAFD200C0988D /* LaunchScreen.storyboard */,
@@ -155,10 +155,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE84A44A1D9255EC0007012E /* HLFragmentDragView.m in Sources */,
 				EEEBA87B1D2BAFD200C0988D /* ViewController.m in Sources */,
 				EEEBA8781D2BAFD200C0988D /* AppDelegate.m in Sources */,
 				EEEBA8751D2BAFD200C0988D /* main.m in Sources */,
-				EE3361B71D2CDA3A00B43952 /* Myview.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
